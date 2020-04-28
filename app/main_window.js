@@ -1,28 +1,26 @@
 const path = require('path');
 const electron = require('electron');
-const { BrowserWindow, session, shell } = electron;
-const Helper = require('./helper');
+const { BrowserWindow, shell, session } = electron;
 const c = require('./constants');
 
 class MainWindow extends BrowserWindow {
   constructor(mainUrl, iconPath, show) {
-    // create options object
     const options = {
+      minWidth: c.mainWindow.minwidth,
+      minHeight: c.mainWindow.minheight,
       width: c.mainWindow.width,
       height: c.mainWindow.height,
       title: c.settings.appName,
+      backgroundColor: c.settings.themeColor,
       icon: iconPath,
-      titleBarStyle: c.settings.titleBarStyle,
-      frame: c.settings.frame,
+      devTools: c.settings.enableDevMenu,
+      frame: false,
       show: (show === false ? false : true),
       webPreferences: {
-        nodeIntegration: c.settings.nodeIntegrationEnabled,
+        nodeIntegration: false,
         preload: path.resolve(__dirname, '../src', 'ipcPreloader.js'),
-      }, 
+      },
     };
-    if (c.settings.windowBackgroundColor) {
-      options.backgroundColor = c.settings.windowBackgroundColor;
-    }
 
     // initalize BrowserWindow
     super(options);
@@ -30,27 +28,21 @@ class MainWindow extends BrowserWindow {
 
     //  -- Event listeners: --
     // Open new windows in default Browser
-    this.webContents.on('new-window', function(e, url) {
+    this.webContents.on('new-window', function (e, url) {
       e.preventDefault();
       shell.openExternal(url);
     });
 
-    // Load provided url
     this.loadHome();
+
+    if (c.settings.enableDevMenu) this.webContents.openDevTools();
   }
 
   // add custom user agent postifx (e.g. for google analytics)
   loadCustomUrl(url) {
-    var userAgentPostfix = c.settings.userAgentPostfixOSX;
-    if (Helper.isWindows()) {
-      userAgentPostfix = c.settings.userAgentPostfixWindows;
-    } else if (Helper.isLinux()) {
-      userAgentPostfix = c.settings.userAgentPostfixLinux;
-    }
-
     this.loadURL(url, {
       userAgent: (session.defaultSession.getUserAgent()
-        + ' ' + userAgentPostfix),
+        + ' ' + c.settings.userAgentPostfix),
     });
   }
 
@@ -61,6 +53,7 @@ class MainWindow extends BrowserWindow {
   loadHome() {
     this.loadRelativeUrl('');
   }
+
 }
 
 module.exports = MainWindow;

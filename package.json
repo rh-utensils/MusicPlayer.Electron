@@ -1,17 +1,18 @@
 {
-  "name": "LeasingRechner",
-  "version": "1.0.0",
-  "description": "Electron Desktop App Wrapper for PWAs / leasingrechnen.at",
-  "homepage": "https://www.leasingrechnen.at",
+  "name": "musicplayer-electron",
+  "productName": "RH Music Player",
+  "version": "1.1.0",
+  "description": "Electron Desktop App Wrapper for the RH Music Player PWA",
+  "homepage": "https://music.hampoelz.net/",
   "main": "index.js",
   "author": {
-    "name": "xTools",
-    "email": "apps@xtools.at"
+    "name": "RH Utensils",
+    "email": "rh-utensils@hampoelz.net"
   },
   "license": "GPLv3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtools-at/Electron-PWA-Wrapper.git"
+    "url": "https://github.com/rh-utensils/MusicPlayer.Electron.git"
   },
   "scripts": {
     "electron": "electron .",
@@ -22,8 +23,9 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "electron": "~1.7.12",
-    "electron-builder": "^19.55.3"
+    "electron": "^8.2.1",
+    "electron-builder": "^22.1.0",
+    "minimist": ">=1.2.2"
   },
   "dependencies": {},
   "files": [
@@ -32,61 +34,121 @@
     "node_modules"
   ],
   "build": {
-    "appId": "at.xtools.leasingrechner.desktop",
-    "productName": "Leasing Rechner",
-    "copyright": "Copyright © 2018 leasingrechnen.at",
-    "mac": {
-      "category": "public.app-category.finance",
-      "target": [
-        {
-          "target": "dmg"
-        },
-        {
-          "target": "mas"
-        }
-      ],
-      "icon": "build/icon.icns"
-    },
-    "dmg": {},
-    "mas": {},
+    "appId": "net.hampoelz.rh-utensils.musicplayer.desktop",
+    "productName": "RH Music Player",
+    "copyright": "Copyright © 2020 Rene Hampölz",
     "win": {
       "target": [
         {
-          "target": "appx"
+          "target": "appx",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         },
         {
-          "target": "portable"
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32",
+            "arm64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32",
+            "arm64"
+          ]
         }
       ],
-      "icon": "build/icon.ico",
-      "legalTrademarks": "Copyright © 2018 leasingrechnen.at",
-      "publisherName": "xTools"
+      "icon": "build/Logo.ico",
+      "legalTrademarks": "Copyright © 2020 Rene Hampölz",
+      "publisherName": "RH-Utensils"
     },
     "appx": {
-      "applicationId": "xTools.LeasingRechner",
-      "backgroundColor": "#F44336",
-      "displayName": "Leasing Rechner",
-      "identityName": "22127xTools.LeasingRechner",
-      "publisher": "CN=84B32E2F-0B83-4D35-8A43-109EF795E8E1",
-      "publisherDisplayName": "xTools",
+      "applicationId": "RHUtensils.MusicPlayer",
+      "backgroundColor": "#0D47A1",
+      "displayName": "RH Music Player",
+      "identityName": "43854RH-Programm.2854494CCC3AF",
+      "publisher": "CN=765089AC-7879-4AB6-97BC-DCAE302E4761",
+      "publisherDisplayName": "RH Utensils",
       "languages": [
+        "en",
         "de"
       ]
     },
-    "portable": {},
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage"
-        }
-      ],
-      "maintainer": "xTools",
-      "vendor": "leasingrechnen.at",
-      "synopsis": "Leasingrechner App",
-      "category": "Office"
+    "nsis": {
+      "perMachine": true,
+      "oneClick": true
     },
-    "appImage": {
-      "systemIntegration": "doNotAsk"
-    }
+    "portable": {},
+    "fileAssociations": [
+      {
+        "ext": [
+          "music",
+          "radio"
+        ],
+        "name": "RH Music Universal",
+        "description": "RH Music native file extension",
+        "icon": "build/fileAssociations/file-settings-outline.ico"
+      },
+      {
+        "ext": "flac",
+        "name": "FLAC",
+        "description": "Free Lossless Audio Codec file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "m4a",
+        "name": "M4A",
+        "description": "MPEG-4 Audio file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "mp3",
+        "name": "MP3",
+        "description": "MPEG-1 Audio Layer 3 file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "ogg",
+        "name": "OGG",
+        "description": "Ogg Vorbis Audio file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "opus",
+        "name": "Opus",
+        "description": "Opus Audio file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "webm",
+        "name": "WebM",
+        "description": "WebM Audio file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": "wav",
+        "name": "WAVE",
+        "description": "WAVE Audio file extension",
+        "icon": "build/fileAssociations/file-music-outline.ico"
+      },
+      {
+        "ext": [
+          "m3u",
+          "vlc",
+          "m3u8",
+          "xspf",
+          "b4s",
+          "jspf"
+        ],
+        "name": "Playlist",
+        "description": "3rd Party playlist file extension",
+        "icon": "build/fileAssociations/file-cancel-outline.ico"
+      }
+    ]
   }
 }

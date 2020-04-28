@@ -1,4 +1,2 @@
-node_modules/
-boilerplate/
-dist/
-*.provisionprofile
+node_modules
+dist
